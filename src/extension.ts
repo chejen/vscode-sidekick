@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 
+import CommandsTreeDataProvider from './CommandsTreeDataProvider';
+
 export function activate(context: vscode.ExtensionContext) {
 	const launchPython3Server = vscode.commands.registerCommand(
 		'vscode-sidekick.launchPython3Server',
@@ -11,6 +13,9 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(launchPython3Server);
+
+	const commandsTreeDataProvider = new CommandsTreeDataProvider();
+	vscode.window.createTreeView('sidekick-commands', { treeDataProvider: commandsTreeDataProvider });
 }
 
 export function deactivate() {}
