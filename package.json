@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-sidekick.helloWorld",
-        "title": "Hello World"
+        "command": "vscode-sidekick.launchPython3Server",
+        "title": "Sidekick: Launch Python3 Server"
       }
     ],
     "viewsContainers": {
