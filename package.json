@@ -17,7 +17,24 @@
         "command": "vscode-sidekick.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "view-sidekick",
+          "title": "Sidekick",
+          "icon": "resources/letter-s.svg"
+        }
+      ]
+    },
+    "views": {
+      "view-sidekick": [
+        {
+          "id": "sidekick-commands",
+          "name": "Commands"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",
