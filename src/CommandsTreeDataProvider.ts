@@ -11,17 +11,17 @@ class TreeItem extends vscode.TreeItem {
   ) {
     super(label);
     this.command = {
-			command,
-			title: 'Execute Custom Command',
-			arguments: [this] // Pass this tree item as an argument
-		};
-		this.description = description;
-		this.tooltip = tooltip;
+      command,
+      title: 'Execute Custom Command',
+      arguments: [this] // Pass this tree item as an argument
+    };
+    this.description = description;
+    this.tooltip = tooltip;
     const iconPath = vscode.Uri.file(path.join(__dirname, 'resources', icon));
-		this.iconPath = {
-			light: iconPath,
-			dark: iconPath,
-		};
+    this.iconPath = {
+      light: iconPath,
+      dark: iconPath,
+    };
   }
 }
 
