@@ -33,12 +33,19 @@ export default class CommandsTreeDataProvider implements vscode.TreeDataProvider
   getChildren(element?: TreeItem): Thenable<TreeItem[]> {
     return Promise.resolve([
       new TreeItem(
+        'Python Server',
+        'vscode-sidekick.launchPythonServer',
+        'Launch Python Simple Server',
+        'python -m SimpleHTTPServer',
+        'python-48.png'
+      ),
+      new TreeItem(
         'Python3 Server',
         'vscode-sidekick.launchPython3Server',
-        'Launch Python3 Server',
+        'Launch Python3 Simple Server',
         'python3 -m http.server',
         'python-48.png'
-      )
+      ),
     ]);
   }
 }

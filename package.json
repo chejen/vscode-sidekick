@@ -16,6 +16,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "vscode-sidekick.launchPythonServer",
+        "title": "Sidekick: Launch Python Server"
+      },
+      {
         "command": "vscode-sidekick.launchPython3Server",
         "title": "Sidekick: Launch Python3 Server"
       }
