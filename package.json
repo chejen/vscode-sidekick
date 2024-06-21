@@ -14,6 +14,21 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Sidekick",
+      "properties": {
+        "sidekick.app-s.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable or disable the Application S."
+        },
+        "sidekick.app-s.folder": {
+          "type": "string",
+          "default": "",
+          "description": "The folder of Application S."
+        }
+      }
+    },
     "commands": [
       {
         "command": "vscode-sidekick.launchPythonServer",
@@ -37,7 +52,12 @@
       "view-sidekick": [
         {
           "id": "sidekick-commands",
-          "name": "Commands"
+          "name": "General Commands"
+        },
+        {
+          "id": "sidekick-app-s",
+          "name": "Application S",
+          "when": "config.sidekick.app-s.enabled && config.sidekick.app-s.folder"
         }
       ]
     }
