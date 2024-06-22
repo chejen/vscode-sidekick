@@ -37,6 +37,10 @@
       {
         "command": "vscode-sidekick.launchPython3Server",
         "title": "Sidekick: Launch Python3 Server"
+      },
+      {
+        "command": "vscode-sidekick.appS.runContainer",
+        "title": "Sidekick: Run docker container in APP S"
       }
     ],
     "viewsContainers": {
