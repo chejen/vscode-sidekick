@@ -17,12 +17,12 @@
     "configuration": {
       "title": "Sidekick",
       "properties": {
-        "sidekick.app-s.enabled": {
+        "sidekick.appS.enabled": {
           "type": "boolean",
           "default": false,
           "description": "Enable or disable the Application S."
         },
-        "sidekick.app-s.folder": {
+        "sidekick.appS.folder": {
           "type": "string",
           "default": "",
           "description": "The folder of Application S."
@@ -48,20 +48,20 @@
         {
           "id": "view-sidekick",
           "title": "Sidekick",
-          "icon": "resources/letter-s.svg"
+          "icon": "resources/sidekick.svg"
         }
       ]
     },
     "views": {
       "view-sidekick": [
         {
-          "id": "sidekick-commands",
+          "id": "sidekick-general-commands",
           "name": "General Commands"
         },
         {
-          "id": "sidekick-app-s",
-          "name": "Application S",
-          "when": "config.sidekick.app-s.enabled && config.sidekick.app-s.folder"
+          "id": "sidekick-appS-commands",
+          "name": "Commands in App S",
+          "when": "config.sidekick.appS.enabled && config.sidekick.appS.folder"
         }
       ]
     }
