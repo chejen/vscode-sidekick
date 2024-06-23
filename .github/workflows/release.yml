@@ -1,0 +1,30 @@
+name: Packaging the extension
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  job_packaging:
+    name: Packaging
+    runs-on: ["ubuntu-latest"]
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - name: Get GITHUB_REF_NAME and GITHUB_SHA
+        run: echo $GITHUB_REF_NAME $GITHUB_SHA
+      - name: Install yarn and dependencies
+        run: |
+          npm install -g yarn
+          yarn
+      - name: Generate vsix
+        run: npx vsce package
+      - name: Archive production artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsix artifact
+          path: ./*.vsix
