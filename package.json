@@ -26,6 +26,16 @@
           "type": "string",
           "default": "",
           "description": "The folder of Application S."
+        },
+        "sidekick.git.authors": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string",
+            "default": "",
+            "description": "The user.name in git config."
+          },
+          "description": "The names used to filter authers for git log."
         }
       }
     },
@@ -54,6 +64,10 @@
     },
     "views": {
       "view-sidekick": [
+        {
+          "id": "sidekick-my-commits",
+          "name": "My Commits"
+        },
         {
           "id": "sidekick-general-commands",
           "name": "General Commands"

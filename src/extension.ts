@@ -1,28 +1,29 @@
-import * as vscode from 'vscode';
+import { ExtensionContext, window, workspace } from 'vscode';
 
 import launchPython3Server from './commands/launchPython3Server';
 import launchPythonServer from './commands/launchPythonServer';
 import runContainerInAppS from './commands/runContainerInAppS';
 
-import CommandsTreeDataProvider from './dataProviders/CommandsTreeDataProvider';
 import AppSTreeDataProvider from './dataProviders/AppSTreeDataProvider';
+import CommandsTreeDataProvider from './dataProviders/CommandsTreeDataProvider';
+import MyCommitsTreeDataProvider from './dataProviders/MyCommitsTreeDataProvider';
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
   context.subscriptions.push(launchPythonServer);
   context.subscriptions.push(launchPython3Server);
   context.subscriptions.push(runContainerInAppS);
 
-  vscode.window.createTreeView(
+  window.registerTreeDataProvider(
     'sidekick-general-commands',
-    {
-      treeDataProvider: new CommandsTreeDataProvider(),
-    }
+    new CommandsTreeDataProvider()
   );
-  vscode.window.createTreeView(
+  window.registerTreeDataProvider(
     'sidekick-appS-commands',
-    {
-      treeDataProvider: new AppSTreeDataProvider(),
-    }
+    new AppSTreeDataProvider()
+  );
+  window.registerTreeDataProvider(
+    'sidekick-my-commits',
+    new MyCommitsTreeDataProvider()
   );
 }
 
