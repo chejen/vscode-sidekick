@@ -6,7 +6,8 @@ import runContainerInAppS from './commands/runContainerInAppS';
 
 import AppSTreeDataProvider from './dataProviders/AppSTreeDataProvider';
 import CommandsTreeDataProvider from './dataProviders/CommandsTreeDataProvider';
-import MyCommitsTreeDataProvider from './dataProviders/MyCommitsTreeDataProvider';
+import MyCommitsTreeDataProvider
+from './dataProviders/MyCommitsTreeDataProvider';
 
 export function activate(context: ExtensionContext) {
   context.subscriptions.push(launchPythonServer);
@@ -23,7 +24,7 @@ export function activate(context: ExtensionContext) {
   );
   window.registerTreeDataProvider(
     'sidekick-my-commits',
-    new MyCommitsTreeDataProvider()
+    new MyCommitsTreeDataProvider(context)
   );
 }
 

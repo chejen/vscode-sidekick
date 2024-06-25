@@ -1,16 +1,18 @@
 import {
+  ExtensionContext,
   TreeDataProvider,
   EventEmitter,
   Event,
   TreeItem,
   TreeItemCollapsibleState,
   ThemeIcon,
+  commands,
   window,
   workspace,
 } from 'vscode';
 import * as child_process from 'child_process';
 
-interface Item {
+export interface Item {
   isFolder: boolean;
   folderName?: string;
   folderPath?: string;
@@ -22,21 +24,35 @@ interface Item {
 const splitter = '__SPLITTER__';
 
 export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item> {
-  // private _onDidChangeTreeData: EventEmitter<Item | undefined | null | void> = new EventEmitter<Item | undefined | null | void>();
-  // readonly onDidChangeTreeData: Event<Item | undefined | null | void> = this._onDidChangeTreeData.event;
+  private _onDidChangeTreeData: EventEmitter<Item | undefined | null | void> = new EventEmitter<Item | undefined | null | void>();
+  readonly onDidChangeTreeData: Event<Item | undefined | null | void> = this._onDidChangeTreeData.event;
 
-  constructor() {}
+  constructor(extensionContext: ExtensionContext) {
+    const reloadAllMyCommits = commands.registerCommand(
+      'vscode-sidekick.reloadAllMyCommits',
+      () => this.refresh()
+    );
+    const reloadMyCommitsByFolder = commands.registerCommand(
+      'vscode-sidekick.reloadMyCommitsByFolder',
+      (item: Item) => this.refresh(item)
+    );
 
-  // refresh(): void {
-  //   this._onDidChangeTreeData.fire();
-  // }
+    // subscript disposable commands
+    extensionContext.subscriptions.push(reloadAllMyCommits);
+    extensionContext.subscriptions.push(reloadMyCommitsByFolder);
+  }
+
+  refresh(element: Item | void): void {
+    this._onDidChangeTreeData.fire(element);
+  }
 
   getTreeItem(element: Item): TreeItem {
     if (element.isFolder) {
       return {
         label: element.folderName,
         tooltip: element.folderPath,
-        collapsibleState: TreeItemCollapsibleState.Collapsed
+        collapsibleState: TreeItemCollapsibleState.Collapsed,
+        contextValue: 'folder',
       };  
     }
     return {
@@ -88,7 +104,5 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
       });
       return Promise.resolve(folders || []);
     }
-
-    return Promise.resolve([]);
   }
 }

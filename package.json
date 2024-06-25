@@ -41,6 +41,16 @@
     },
     "commands": [
       {
+        "icon": "$(refresh)",
+        "command": "vscode-sidekick.reloadAllMyCommits",
+        "title": "Sidekick: Reload All the Commits"
+      },
+      {
+        "icon": "$(refresh)",
+        "command": "vscode-sidekick.reloadMyCommitsByFolder",
+        "title": "Sidekick: Reload Commits"
+      },
+      {
         "command": "vscode-sidekick.launchPythonServer",
         "title": "Sidekick: Launch Python Server"
       },
@@ -76,6 +86,22 @@
           "id": "sidekick-appS-commands",
           "name": "Commands in App S",
           "when": "config.sidekick.appS.enabled && config.sidekick.appS.folder"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "when": "view == sidekick-my-commits",
+          "command": "vscode-sidekick.reloadAllMyCommits",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "when": "view == sidekick-my-commits && viewItem == folder",
+          "command": "vscode-sidekick.reloadMyCommitsByFolder",
+          "group": "inline"
         }
       ]
     }
