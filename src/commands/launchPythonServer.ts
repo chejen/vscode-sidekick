@@ -3,7 +3,10 @@ import { commands, window } from 'vscode';
 const launchPythonServer = commands.registerCommand(
   'vscode-sidekick.launchPythonServer',
   () => {
-    const terminal = window.createTerminal('Python Server Terminal');
+    let terminal = window.activeTerminal;
+    if (!terminal) {
+      terminal = window.createTerminal('Python Server');
+    }
     terminal.show();
     terminal.sendText('python -m SimpleHTTPServer', true);
   }
