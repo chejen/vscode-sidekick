@@ -7,6 +7,7 @@ import {
   TreeItemCollapsibleState,
   ThemeIcon,
   commands,
+  env,
   window,
   workspace,
 } from 'vscode';
@@ -36,10 +37,22 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
       'vscode-sidekick.reloadMyCommitsByFolder',
       (item: Item) => this.refresh(item)
     );
+    const copySha = commands.registerCommand(
+      'vscode-sidekick.copySha',
+      ({ shortSha }) => {
+        if (shortSha) {
+          env.clipboard.writeText(shortSha);
+          window.showInformationMessage(`Copied: ${shortSha}`);
+        } else {
+          window.showErrorMessage('No SHA to copy');
+        }
+      }
+    );
 
     // subscript disposable commands
     extensionContext.subscriptions.push(reloadAllMyCommits);
     extensionContext.subscriptions.push(reloadMyCommitsByFolder);
+    extensionContext.subscriptions.push(copySha);
   }
 
   refresh(element: Item | void): void {
@@ -60,6 +73,7 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
       description: element.message,
       tooltip: element.date,
       collapsibleState: TreeItemCollapsibleState.None,
+      contextValue: 'commit',
       iconPath: new ThemeIcon('git-commit'),
     };
   }
@@ -74,7 +88,7 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
         window.showErrorMessage('The "sidekick.git.authors" is not set.');
         return Promise.resolve([]);
       }
-      
+
       return new Promise(resolve => {
         child_process.exec(
           `git log ${authors.join(' ')} --pretty='format:%h${splitter}%s${splitter}%ad'`,

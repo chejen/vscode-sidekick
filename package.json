@@ -51,6 +51,11 @@
         "title": "Sidekick: Reload Commits"
       },
       {
+        "icon": "$(files)",
+        "command": "vscode-sidekick.copySha",
+        "title": "Sidekick: Copy commit SHA"
+      },
+      {
         "command": "vscode-sidekick.launchPythonServer",
         "title": "Sidekick: Launch Python Server"
       },
@@ -101,6 +106,11 @@
         {
           "when": "view == sidekick-my-commits && viewItem == folder",
           "command": "vscode-sidekick.reloadMyCommitsByFolder",
+          "group": "inline"
+        },
+        {
+          "when": "view == sidekick-my-commits && viewItem == commit",
+          "command": "vscode-sidekick.copySha",
           "group": "inline"
         }
       ]
