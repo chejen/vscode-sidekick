@@ -30,15 +30,15 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
 
   constructor(extensionContext: ExtensionContext) {
     const reloadAllMyCommits = commands.registerCommand(
-      'vscode-sidekick.reloadAllMyCommits',
+      'vscode-sidekick.my-commits.reloadAll',
       () => this.refresh()
     );
     const reloadMyCommitsByFolder = commands.registerCommand(
-      'vscode-sidekick.reloadMyCommitsByFolder',
+      'vscode-sidekick.my-commits.reloadByFolder',
       (item: Item) => this.refresh(item)
     );
     const copySha = commands.registerCommand(
-      'vscode-sidekick.copySha',
+      'vscode-sidekick.my-commits.copySha',
       ({ shortSha }) => {
         if (shortSha) {
           env.clipboard.writeText(shortSha);
@@ -57,6 +57,7 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
 
   refresh(element: Item | void): void {
     this._onDidChangeTreeData.fire(element);
+    window.showInformationMessage(`${element?.folderName || 'All'} reloaded`);
   }
 
   getTreeItem(element: Item): TreeItem {
@@ -69,8 +70,8 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
       };  
     }
     return {
-      label: element.shortSha,
-      description: element.message,
+      label: element.message,
+      description: element.shortSha,
       tooltip: element.date,
       collapsibleState: TreeItemCollapsibleState.None,
       contextValue: 'commit',
@@ -108,15 +109,15 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
           }
         );
       });
-    } else {
-      const folders = workspace.workspaceFolders?.map(folder => {
-        return {
-          isFolder: true,
-          folderName: folder.name,
-          folderPath: folder.uri.fsPath,
-        } as Item;
-      });
-      return Promise.resolve(folders || []);
     }
+
+    const folders = workspace.workspaceFolders?.map(folder => {
+      return {
+        isFolder: true,
+        folderName: folder.name,
+        folderPath: folder.uri.fsPath,
+      } as Item;
+    });
+    return Promise.resolve(folders || []);
   }
 }

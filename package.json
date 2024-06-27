@@ -42,17 +42,17 @@
     "commands": [
       {
         "icon": "$(refresh)",
-        "command": "vscode-sidekick.reloadAllMyCommits",
+        "command": "vscode-sidekick.my-commits.reloadAll",
         "title": "Sidekick: Reload All the Commits"
       },
       {
         "icon": "$(refresh)",
-        "command": "vscode-sidekick.reloadMyCommitsByFolder",
+        "command": "vscode-sidekick.my-commits.reloadByFolder",
         "title": "Sidekick: Reload Commits"
       },
       {
         "icon": "$(files)",
-        "command": "vscode-sidekick.copySha",
+        "command": "vscode-sidekick.my-commits.copySha",
         "title": "Sidekick: Copy commit SHA"
       },
       {
@@ -98,19 +98,19 @@
       "view/title": [
         {
           "when": "view == sidekick-my-commits",
-          "command": "vscode-sidekick.reloadAllMyCommits",
+          "command": "vscode-sidekick.my-commits.reloadAll",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
           "when": "view == sidekick-my-commits && viewItem == folder",
-          "command": "vscode-sidekick.reloadMyCommitsByFolder",
+          "command": "vscode-sidekick.my-commits.reloadByFolder",
           "group": "inline"
         },
         {
           "when": "view == sidekick-my-commits && viewItem == commit",
-          "command": "vscode-sidekick.copySha",
+          "command": "vscode-sidekick.my-commits.copySha",
           "group": "inline"
         }
       ]
