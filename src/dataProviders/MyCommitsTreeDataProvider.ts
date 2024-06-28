@@ -17,6 +17,7 @@ export interface Item {
   isFolder: boolean;
   folderName?: string;
   folderPath?: string;
+  branch?: string;
   shortSha?: string;
   message?: string;
   date?: string;
@@ -64,6 +65,7 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
     if (element.isFolder) {
       return {
         label: element.folderName,
+        description: element.branch,
         tooltip: element.folderPath,
         collapsibleState: TreeItemCollapsibleState.Collapsed,
         contextValue: 'folder',
@@ -118,6 +120,27 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
         folderPath: folder.uri.fsPath,
       } as Item;
     });
+    const promises = [];
+    if (folders?.length) {
+      for (const folder of folders) {
+        promises.push(new Promise<string>(resolve => {
+          child_process.exec(
+            'git rev-parse --abbrev-ref HEAD',
+            { cwd: folder.folderPath },
+            (err, stdout) => {
+              if (err) {
+                resolve('');
+                return;
+              }
+              resolve(stdout.trim());
+            }
+          );
+        }));
+      }
+      return Promise.all(promises).then(branches =>
+        folders.map((folder, index) => ({ ...folder, branch: branches[index] }))
+      );
+    }
     return Promise.resolve(folders || []);
   }
 }
