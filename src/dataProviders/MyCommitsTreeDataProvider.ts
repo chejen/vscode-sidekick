@@ -13,21 +13,29 @@ import {
 } from 'vscode';
 import * as child_process from 'child_process';
 
-export interface Item {
-  isFolder: boolean;
-  folderName?: string;
-  folderPath?: string;
-  branch?: string;
-  shortSha?: string;
-  message?: string;
-  date?: string;
+interface Folder {
+  isFolder: true;
+  folderName: string;
+  folderPath: string;
+  branch: string;
 }
+
+interface Commit {
+  isFolder: false;
+  shortSha: string;
+  message: string;
+  date: string;
+}
+
+type TreeItemType = Folder | Commit;
 
 const splitter = '__SPLITTER__';
 
-export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item> {
-  private _onDidChangeTreeData: EventEmitter<Item | undefined | null | void> = new EventEmitter<Item | undefined | null | void>();
-  readonly onDidChangeTreeData: Event<Item | undefined | null | void> = this._onDidChangeTreeData.event;
+export default class MyCommitsTreeDataProvider implements TreeDataProvider<TreeItemType> {
+  private _onDidChangeTreeData: EventEmitter<TreeItemType | undefined | null | void> =
+    new EventEmitter<TreeItemType | undefined | null | void>();
+  readonly onDidChangeTreeData: Event<TreeItemType | undefined | null | void> =
+    this._onDidChangeTreeData.event;
 
   constructor(extensionContext: ExtensionContext) {
     const reloadAllMyCommits = commands.registerCommand(
@@ -36,7 +44,7 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
     );
     const reloadMyCommitsByFolder = commands.registerCommand(
       'vscode-sidekick.my-commits.reloadByFolder',
-      (item: Item) => this.refresh(item)
+      (item: TreeItemType) => this.refresh(item)
     );
     const copySha = commands.registerCommand(
       'vscode-sidekick.my-commits.copySha',
@@ -56,12 +64,14 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
     extensionContext.subscriptions.push(copySha);
   }
 
-  refresh(element: Item | void): void {
+  refresh(element: TreeItemType | void): void {
     this._onDidChangeTreeData.fire(element);
-    window.showInformationMessage(`${element?.folderName || 'All'} reloaded`);
+    window.showInformationMessage(
+      `${element?.isFolder ? element?.folderName : 'All'} reloaded`
+    );
   }
 
-  getTreeItem(element: Item): TreeItem {
+  getTreeItem(element: TreeItemType): TreeItem {
     if (element.isFolder) {
       return {
         label: element.folderName,
@@ -81,8 +91,8 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
     };
   }
 
-  getChildren(element?: Item): Thenable<Item[]> {
-    if (element) {
+  getChildren(element?: TreeItemType): Thenable<Folder[] | Commit[]> {
+    if (element?.isFolder) {
       const configAuthors: string[] =
         workspace.getConfiguration('sidekick.git').get('authors') || [];
       const authors: string[] =
@@ -92,7 +102,7 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
         return Promise.resolve([]);
       }
 
-      return new Promise(resolve => {
+      return new Promise<Commit[]>(resolve => {
         child_process.exec(
           `git log ${authors.join(' ')} --pretty='format:%h${splitter}%s${splitter}%ad'`,
           { cwd: element.folderPath },
@@ -104,7 +114,7 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
 
             const commits = stdout.trim().split('\n').map(line => {
               const [shortSha, message, date] = line.split(splitter);
-              return { shortSha, message, date } as Item;
+              return { shortSha, message, date } as Commit;
             });
             
             resolve(commits);
@@ -118,7 +128,7 @@ export default class MyCommitsTreeDataProvider implements TreeDataProvider<Item>
         isFolder: true,
         folderName: folder.name,
         folderPath: folder.uri.fsPath,
-      } as Item;
+      } as Folder;
     });
     const promises = [];
     if (folders?.length) {
